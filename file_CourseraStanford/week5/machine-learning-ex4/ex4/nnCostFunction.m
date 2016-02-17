@@ -39,17 +39,21 @@ Theta2_grad = zeros(size(Theta2));
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
 %
-
+% fix lai vector y
+Y = zeros(m, num_labels);
+for i=1:m
+      Y(i, mod(y(i),10))=1;
+end
 % them dac trung bias vao X
-x = [ones(1,m), X];
+X = [ones(m, 1), X];
 % tinh gia tri cua ham gia thuyet H
 a_1 = sigmoid(X*Theta1');
 % them dac trung bias vao a_1
-a_1 = [ones(1, m), a_1];
+a_1 = [ones(m, 1), a_1];
 % tinh gia tri cua ham gia thuyet H
 h = sigmoid(a_1*Theta2');
 % tinh gia tri ham cost J
-J = J + 1/m*sum(sum(-y.*log(h)-(1-y).*log(1-h),2))+...
+J = J + 1/m*sum(sum((-y.*log(h)-(1-y).*log(1-h)),2))+...
       lambda/2/m*(sum(sum(Theta1.^2))+sum(sum(Theta2.^2)));
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
