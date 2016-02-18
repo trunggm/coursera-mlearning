@@ -70,30 +70,30 @@ J = J + 1/m*sum(sum((-Y.*log(h)-(1-Y).*log(1-h)),2))+...
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
-% khoi tao gia tri cua deltaC
-deltaC1=zeros(1, size(Theta1,2));
-deltaC2=zeros(1, size(Theta2,2));
-
+% khoi tao gia tri cua  deltaC
+deltaC1 = zeros(input_layer_size, 1); 
+deltaC2 = zeros(hidden_layer_size, 1); 
 for i=1:m
 % thuc hien lan truyen thuan
       % gan a1=du lieu train
-      a1 = X(i,:);
+      a1 = X(i,:)';
       % tinh gia tri active a2
-      z2 = sigmoid(a1*Theta1');
+      z2 = sigmoid(Theta1*a1);
       % them gia tri 1 vao tinh toan
-      a2 = [1, z2];
+      a2 = [1; z2];
       % tinh gia tri cua ham gia thuyet tuong ung voi gia tri cua Xi
-      a3 = sigmoid(a2*Theta2');
-      h = a3;
+      a3 = sigmoid(Theta2*a2);
+      h = a3; % gia tri ham gia thuyet h = a3
 % thuc hien lan truyen nguoc
-      % de tinh gia tri cua sai so tai moi nut 
-      delta3 = a3 - Y(i, :);
-      grad2=a2.*(1-a2);
-      delta2 = (delta3*Theta2).*grad2;
-      % update gia tri cua DeltaC1 vaf 2
-      for j=1:size(Theta2,2)
-            deltaC2=deltaC2+a2(j)*delta3;
-      end
+      delta3=a3-Y(i,:)'; %sai so cua cac nut o output layer(la vector hang)
+      % tinh sai so o ca layer tiep theo
+      delta2=(Theta2'*a3).*(a2.*(1-a2)); % tinh gia tri sai so 
+                                          % cua cac nut o hiden layer
+      % cap nhat gia tri cua cac deltaC
+      delta2=delta2(2:end);
+      delta_temp = delta3.*a2;
+      deltaC2 = deltaC2 + delta_temp;
+      %deltaC1 = deltaC1 + delta2*a1;
 end
 % Part 3: Implement regularization with the cost function and gradients.
 %
