@@ -21,7 +21,7 @@ W = zeros(L_out, 1 + L_in);
 % khoi tao gia tri epsilon
 epsilon = 0.1;
 % Random gia tri trong so W
-W = rand(L_out, 1+L_in)*2*epsilon - epsilon;
+W = rand(L_out, 1+Lin)
 
 
 
