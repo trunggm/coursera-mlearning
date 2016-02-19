@@ -40,21 +40,19 @@ Theta2_grad = zeros(size(Theta2));
 %         computed in ex4.m
 %
 % fix lai vector y
-Y = zeros(m, num_labels);
-for i=1:m
-      Y(i, mod(y(i),10))=1;
-end
+Y = repmat([1:num_labels], m, 1) == repmat(y, 1, num_labels);
 % them dac trung bias vao X
-X = [ones(m, 1), X];
+a_1 = [ones(m, 1), X];
 % tinh gia tri cua ham gia thuyet H
 a_2 = sigmoid(X*Theta1');
 % them dac trung bias vao a_1
 a_2 = [ones(m, 1), a_2];
 % tinh gia tri cua ham gia thuyet H
-h = sigmoid(a_2*Theta2');
+a_3 = sigmoid(a_2*Theta2');
+
 % tinh gia tri ham cost J
 J = J + 1/m*sum(sum((-Y.*log(h)-(1-Y).*log(1-h)),2))+...
-      lambda/2/m*(sum(sum(Theta1.^2))+sum(sum(Theta2.^2)));
+      lambda/2/m*(sum(sum(Theta1(:, 2:end).^2))+sum(sum(Theta2(:, 2:end).^2)));
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
 %         the cost function with respect to Theta1 and Theta2 in Theta1_grad and
@@ -70,31 +68,39 @@ J = J + 1/m*sum(sum((-Y.*log(h)-(1-Y).*log(1-h)),2))+...
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
-% khoi tao gia tri cua  deltaC
-deltaC1 = zeros(input_layer_size, 1); 
-deltaC2 = zeros(hidden_layer_size, 1); 
+% xac dinh cac tham so theta ko co bias
+Theta1_NoBias = Theta1(:, 2:end);
+Theta2_NoBias = Theta2(:, 2:end);
+% khoi tao gia tri cua delta
+deltaC1 = zeros(size(Theta1));
+deltaC2 = zeros(size(Theta2));
 for i=1:m
 % thuc hien lan truyen thuan
       % gan a1=du lieu train
-      a1 = X(i,:)';
+      a_1i = a_1(i, :)';
       % tinh gia tri active a2
-      z2 = sigmoid(Theta1*a1);
-      % them gia tri 1 vao tinh toan
-      a2 = [1; z2];
+      a_2i = a_2(i, :)';
       % tinh gia tri cua ham gia thuyet tuong ung voi gia tri cua Xi
-      a3 = sigmoid(Theta2*a2);
-      h = a3; % gia tri ham gia thuyet h = a3
+      a_3i = a_3(i, :)';
+      % gia tri dau ra thuc te tuong ung
+      Y_i = Y(i, :); 
 % thuc hien lan truyen nguoc
       delta3=a3-Y(i,:)'; %sai so cua cac nut o output layer(la vector hang)
+      z2t=[1; Theta1*a_1i];
       % tinh sai so o ca layer tiep theo
-      delta2=(Theta2'*a3).*(a2.*(1-a2)); % tinh gia tri sai so 
+      delta2=(Theta2'*delta3).*sigmoidGradient(z2t); % tinh gia tri sai so 
                                           % cua cac nut o hiden layer
       % cap nhat gia tri cua cac deltaC
-      delta2=delta2(2:end);
-      delta_temp = delta3.*a2;
-      deltaC2 = deltaC2 + delta_temp;
-      %deltaC1 = deltaC1 + delta2*a1;
+      delta2_temp=delta2(2:end);
+      deltaC2 = deltaC2+delta3*a2i';
+      deltaC1 = deltaC1+delta2*a1i';
 end
+% tao cac Theta co gia tri Bias = 0
+Theta1_0Bias = [zeros(size(Theta1, 1), 1) Theta1_NoBias];
+Theta2_0Bias = [zeros(size(Theta2, 1), 1) Theta2_NoBias];
+% tinh gia tri gradien cua theta1 va theta 2
+Theta1_grad=1/m*deltaC1+(lambda/m)*Theta1_0Bias;
+Theta2_grad=1/m*deltaC2+(lambda/m)*Theta2_0Bias;
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
