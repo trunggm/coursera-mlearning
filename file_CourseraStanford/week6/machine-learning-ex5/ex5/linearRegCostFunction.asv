@@ -27,12 +27,12 @@ else
       temp_X = X;
 end
 % tinh gia tri ham gia thuyet tuong ung voi gia tri X
-h = temp_X*theta;
+h = X*theta';
 % tinh gia tri cua ham cost J
-J = J+1/2/m*sum((h-y).^2)+lambda/2/m*sum(theta(2:end).^2);
+J = 1/2
 
-% tinh gia tri cua gradient
-grad = (1/m)*((temp_X'*(h-y)))+(lambda/m)*[0; theta(2:end)];
+
+
 
 
 
