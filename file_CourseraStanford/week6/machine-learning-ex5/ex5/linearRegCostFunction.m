@@ -18,24 +18,16 @@ grad = zeros(size(theta));
 %
 %               You should set J to the cost and grad to the gradient.
 %
-% kich thuoc cua Theta bang so luong dac trung cua tap X
-number_feature = size(theta);
-% neu tap du lieu train chua co bias thi them bias vao
-if size(X, 2)< number_feature
-      temp_X = [ones(number_feature, 1) X];
-else
-      temp_X = X;
-end
-% tinh gia tri ham gia thuyet tuong ung voi gia tri X
-h = temp_X*theta;
-% tinh gia tri cua ham cost J
-J = J+1/2/m*sum((h-y).^2)+lambda/2/m*sum(theta(2:end).^2);
-
-% tinh gia tri cua gradient
-grad = (1/m)*((temp_X'*(h-y)))+(lambda/m)*[0; theta(2:end)];
-
-
-
+% tinh gia tri ham gia thuyet tu du lieu tranning
+h = X * theta;
+% tinh binh phuong sai so
+squaredErrors = (h - y) .^ 2;
+% khoi tao Theta vs bias bang 0
+thetaNoZero = [ 0; theta(2:end) ];
+% tinh gia tri ham cost J
+J = (1 / (2 * m)) * sum(squaredErrors) + (lambda / (2 * m)) * sum(thetaNoZero .^ 2);
+% tinh gia tri gradien tuong ung
+grad = (1 / m) .* (X' * (h - y)) + (lambda / m) * thetaNoZero;
 
 % =========================================================================
 

@@ -15,10 +15,13 @@ X_poly = zeros(numel(X), p);
 %
 % 
 
-
-
-
-
+m = length(X);
+% xep bac cua x thanh mot vector
+powers = repmat([1:p], m, 1);
+% xep X thanh 1 vector
+Xrepeated = repmat(X, 1, p);
+% tinh gia tri X_poly bang cach mu X  tuong ung vs powers
+X_poly = Xrepeated .^ powers;
 
 % =========================================================================
 

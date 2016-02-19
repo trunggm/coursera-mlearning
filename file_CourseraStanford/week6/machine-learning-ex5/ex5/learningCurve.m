@@ -53,11 +53,16 @@ error_val   = zeros(m, 1);
 
 % ---------------------- Sample Solution ----------------------
 
-
-
-
-
-
+for i = 1:m,
+      % khoi tao tap trainning con tu tap trainning goc
+      XSubset = X(1:i, :);
+      ySubset = y(1:i);
+      % huan luyen de tim theta tu tap trainning con
+      theta = trainLinearReg(XSubset, ySubset, lambda);
+      % tinh sai so trainning va sai so cross validation
+      error_train(i) = linearRegCostFunction(XSubset, ySubset, theta, 0);
+      error_val(i) = linearRegCostFunction(Xval, yval, theta, 0);
+end;
 
 % -------------------------------------------------------------
 

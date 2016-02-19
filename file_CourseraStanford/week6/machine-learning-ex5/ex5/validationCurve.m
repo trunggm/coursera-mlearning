@@ -39,14 +39,15 @@ error_val = zeros(length(lambda_vec), 1);
 %
 %
 
-
-
-
-
-
-
-
-
+for i = 1:length(lambda_vec),
+      % gan lambda bang gia tri tu lambda_vec
+      lambda = lambda_vec(i);
+      % huan luyen theta voi lambda tuong ung
+      theta = trainLinearReg(X, y, lambda);
+      % tinh sai so train va sai so cross validation
+      error_train(i) = linearRegCostFunction(X, y, theta, 0);
+      error_val(i) = linearRegCostFunction(Xval, yval, theta, 0);
+end;
 
 % =========================================================================
 
