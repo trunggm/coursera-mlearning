@@ -18,10 +18,17 @@ W = zeros(L_out, 1 + L_in);
 %
 % Note: The first row of W corresponds to the parameters for the bias units
 %
+<<<<<<< HEAD
 
 
 
 
+=======
+% khoi tao gia tri epsilon
+epsilon = 0.12;
+% Random gia tri trong so W
+W = rand(L_out, 1+L_in)*2*epsilon - epsilon;
+>>>>>>> ab8c585ef7a2f3b784b2e071fc66dbc64b37448d
 
 
 
